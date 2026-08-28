@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HojaClara - Nivel 1</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 30px;
+            background-color: #fcfcfc;
+            color: #13384c;
+        }
+
+        .header-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-subtitle {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-style: italic;
+            font-size: 24px;
+            color: #2c6b6f;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .header-title {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: 36px;
+            color: #13384c;
+            margin: 5px 0 15px 0;
+            font-weight: bold;
+        }
+
+        .excel-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #13384c;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(19, 56, 76, 0.1);
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border: 1px solid #dcdcdc;
+            padding: 0;
+            height: 28px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        /* Estilo para los encabezados de columna (A, B, C...) y celda esquina superior izquierda */
+        th {
+            background-color: #f1f4f5;
+            color: #2c6b6f;
+            font-weight: 600;
+        }
+
+        /* Estilo específico para la columna lateral de números de fila (1, 2, 3...) */
+        td.row-header {
+            background-color: #f1f4f5;
+            color: #2c6b6f;
+            font-weight: 600;
+            width: 45px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <p class="header-subtitle">Enunciado de Práctica de Curso</p>
+        <h1 class="header-title">“HojaClara”</h1>
+    </div>
+
+    <div class="excel-container">
+        <table>
+            <thead id="spreadsheet-head"></thead>
+            <tbody id="spreadsheet-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Configuración de tamaño de la cuadrícula para el Nivel 1
+        const TOTAL_ROWS = 15;
+        const TOTAL_COLS = 10;
+
+        const tableHead = document.getElementById('spreadsheet-head');
+        const tableBody = document.getElementById('spreadsheet-body');
+
+        // Función auxiliar para convertir índice de columna (0, 1, 2...) a letra (A, B, C...)
+        function getColumnLetter(index) {
+            return String.fromCharCode(65 + index);
+        }
+
+        // Generación dinámica de la estructura de la cuadrícula usando ciclos anidados
+        function renderLevel1Grid() {
+            // 1. Construir la cabecera (Fila superior con letras de columnas)
+            let headHtml = '<tr><th></th>'; // Celda vacía en la esquina superior izquierda
+            for (let c = 0; c < TOTAL_COLS; c++) {
+                headHtml += `<th>${getColumnLetter(c)}</th>`;
+            }
+            headHtml += '</tr>';
+            tableHead.innerHTML = headHtml;
+
+            // 2. Construir el cuerpo (Filas con numeración lateral y celdas vacías)
+            let bodyHtml = '';
+            for (let r = 0; r < TOTAL_ROWS; r++) {
+                bodyHtml += '<tr>';
+                // Columna lateral izquierda con el número de fila (1, 2, 3...)
+                bodyHtml += `<td class="row-header">${r + 1}</td>`;
+                
+                // Celdas de datos de la fila
+                for (let c = 0; c < TOTAL_COLS; c++) {
+                    bodyHtml += `<td></td>`;
+                }
+                bodyHtml += '</tr>';
+            }
+            tableBody.innerHTML = bodyHtml;
+        }
+
+        // Ejecutar la renderización inicial del Nivel 1
+        renderLevel1Grid();
+    </script>
+</body>
+</html>
