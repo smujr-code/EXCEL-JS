@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HojaClara - Nivel 1</title>
+    <title>HojaClara - Nivel 2</title>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -57,22 +57,40 @@
             height: 28px;
             text-align: center;
             font-size: 13px;
+            position: relative;
         }
 
-        /* Estilo para los encabezados de columna (A, B, C...) y celda esquina superior izquierda */
         th {
             background-color: #f1f4f5;
             color: #2c6b6f;
             font-weight: 600;
         }
 
-        /* Estilo específico para la columna lateral de números de fila (1, 2, 3...) */
         td.row-header {
             background-color: #f1f4f5;
             color: #2c6b6f;
             font-weight: 600;
             width: 45px;
             text-align: center;
+        }
+
+        /* Estilo para celda activa/seleccionada en Nivel 2 */
+        td.active-cell {
+            outline: 2px solid #2c6b6f;
+            z-index: 5;
+            background-color: #f7fafc;
+        }
+
+        td span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            inset: 0;
+            padding: 0 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -91,46 +109,89 @@
     </div>
 
     <script>
-        // Configuración de tamaño de la cuadrícula para el Nivel 1
         const TOTAL_ROWS = 15;
         const TOTAL_COLS = 10;
 
         const tableHead = document.getElementById('spreadsheet-head');
         const tableBody = document.getElementById('spreadsheet-body');
 
-        // Función auxiliar para convertir índice de columna (0, 1, 2...) a letra (A, B, C...)
+        // Nivel 2: Estructura de datos independiente (Matriz bidimensional de almacenamiento)
+        let cellData = Array.from({ length: TOTAL_COLS }, () => 
+            Array.from({ length: TOTAL_ROWS }, () => '')
+        );
+
+        // Control de celda activa seleccionada
+        let activeCol = 0;
+        let activeRow = 0;
+
         function getColumnLetter(index) {
             return String.fromCharCode(65 + index);
         }
 
-        // Generación dinámica de la estructura de la cuadrícula usando ciclos anidados
-        function renderLevel1Grid() {
-            // 1. Construir la cabecera (Fila superior con letras de columnas)
-            let headHtml = '<tr><th></th>'; // Celda vacía en la esquina superior izquierda
+        // Renderizado dinámico de la cuadrícula reflejando el estado de los datos
+        function renderGrid() {
+            // 1. Cabecera superior (Letras de columnas)
+            let headHtml = '<tr><th></th>';
             for (let c = 0; c < TOTAL_COLS; c++) {
                 headHtml += `<th>${getColumnLetter(c)}</th>`;
             }
             headHtml += '</tr>';
             tableHead.innerHTML = headHtml;
 
-            // 2. Construir el cuerpo (Filas con numeración lateral y celdas vacías)
+            // 2. Cuerpo de la tabla (Filas, numeración y valores de la estructura de datos)
             let bodyHtml = '';
             for (let r = 0; r < TOTAL_ROWS; r++) {
                 bodyHtml += '<tr>';
-                // Columna lateral izquierda con el número de fila (1, 2, 3...)
                 bodyHtml += `<td class="row-header">${r + 1}</td>`;
                 
-                // Celdas de datos de la fila
                 for (let c = 0; c < TOTAL_COLS; c++) {
-                    bodyHtml += `<td></td>`;
+                    const value = cellData[c][r];
+                    const isActive = (activeCol === c && activeRow === r) ? 'active-cell' : '';
+                    
+                    bodyHtml += `<td data-col="${c}" data-row="${r}" class="${isActive}">
+                        <span>${value}</span>
+                    </td>`;
                 }
                 bodyHtml += '</tr>';
             }
             tableBody.innerHTML = bodyHtml;
         }
 
-        // Ejecutar la renderización inicial del Nivel 1
-        renderLevel1Grid();
+        // Nivel 2: Edición de celdas al hacer clic o doble clic (activando un campo de entrada)
+        tableBody.addEventListener('click', (event) => {
+            const td = event.target.closest('td');
+            if (!td || td.classList.contains('row-header')) return;
+
+            const c = parseInt(td.dataset.col, 10);
+            const r = parseInt(td.dataset.row, 10);
+
+            activeCol = c;
+            activeRow = r;
+            renderGrid();
+        });
+
+        tableBody.addEventListener('dblclick', (event) => {
+            const td = event.target.closest('td');
+            if (!td || td.classList.contains('row-header')) return;
+
+            const c = parseInt(td.dataset.col, 10);
+            const r = parseInt(td.dataset.row, 10);
+
+            activeCol = c;
+            activeRow = r;
+
+            // Campo de edición (Prompt simple para confirmar valor y guardarlo en la estructura)
+            const currentValue = cellData[c][r];
+            const newValue = prompt(`Editar celda ${getColumnLetter(c)}${r + 1}:`, currentValue);
+
+            if (newValue !== null) {
+                cellData[c][r] = newValue; // Guardar en la estructura de datos independiente
+                renderGrid(); // Reflejar en la cuadrícula visual
+            }
+        });
+
+        // Renderizado inicial
+        renderGrid();
     </script>
 </body>
 </html>
