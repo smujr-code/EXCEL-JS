@@ -1,12 +1,21 @@
-Algoritmo GenerarCuadricula
-    Definir totalFilas, totalColumnas, i, j Como Entero
+Algoritmo PrincipalHojaClara
+    Definir matrizResultado Como Cadena
+    // Llamada de prueba a la función
+    matrizResultado <- GenerarCuadricula(15, 10)
+FinAlgoritmo
+
+Funcion matrizResultado <- GenerarCuadricula(totalFilas, totalColumnas)
+    Definir i, j Como Entero
+    Dimension matrizResultado[totalFilas, totalColumnas]
     
-    totalFilas <- 15
-    totalColumnas <- 10
-    
+    // Recorrer filas
     Para i <- 1 Hasta totalFilas Hacer
+        // Recorrer columnas
         Para j <- 1 Hasta totalColumnas Hacer
-            // Crear cada celda de la cuadrícula
+            // Crear e inicializar cada celda de la cuadrícula como vacía
+            matrizResultado[i, j] <- ""
         FinPara
     FinPara
-FinAlgoritmo
+    
+    // No se necesita la línea "Retornar", el nombre de la función ya devuelve el arreglo
+FinFuncion
