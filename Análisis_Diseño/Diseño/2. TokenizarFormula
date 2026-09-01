@@ -1,0 +1,46 @@
+Algoritmo PrincipalTokenizador
+    Definir formula Como Cadena
+    formula <- "=A1+B2*3"
+	
+    Escribir TokenizarFormula(formula)
+FinAlgoritmo
+
+
+Funcion resultadoTokens <- TokenizarFormula(formula)
+    Definir i Como Entero
+    Definir caracter Como Cadena
+    Definir token Como Cadena
+    Definir resultadoTokens Como Cadena
+	
+    resultadoTokens <- ""
+    token <- ""
+	
+    // Recorrer fórmula
+    Para i <- 1 Hasta Longitud(formula) Hacer
+        caracter <- Subcadena(formula, i, i)
+		
+        // Detectar operadores y paréntesis
+        Si caracter = "+" O caracter = "-" O caracter = "*" O caracter = "/" O caracter = "(" O caracter = ")" Entonces
+			
+            // Guardar token anterior
+            Si token <> "" Entonces
+                resultadoTokens <- resultadoTokens + token + " "
+                token <- ""
+            FinSi
+			
+            // Guardar operador
+            resultadoTokens <- resultadoTokens + caracter + " "
+			
+        SiNo
+            Si caracter <> "=" Y caracter <> " " Entonces
+                // Formar número o referencia
+                token <- token + caracter
+            FinSi
+        FinSi
+    FinPara
+	
+    // Guardar último token
+    Si token <> "" Entonces
+        resultadoTokens <- resultadoTokens + token
+    FinSi
+FinFuncion
