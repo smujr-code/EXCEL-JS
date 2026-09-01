@@ -1,0 +1,12 @@
+Algoritmo GenerarCuadricula
+    Definir totalFilas, totalColumnas, i, j Como Entero
+    
+    totalFilas <- 15
+    totalColumnas <- 10
+    
+    Para i <- 1 Hasta totalFilas Hacer
+        Para j <- 1 Hasta totalColumnas Hacer
+            // Crear cada celda de la cuadrícula
+        FinPara
+    FinPara
+FinAlgoritmo
