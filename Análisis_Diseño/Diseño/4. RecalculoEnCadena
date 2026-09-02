@@ -1,0 +1,134 @@
+
+Algoritmo RecalculoEnCadena
+    Definir A1, B2, C3, D4 Como Real
+    Definir celdaModificada Como Cadena
+	
+    // ============================================================
+    // 1. Valores iniciales de las celdas
+    // ============================================================
+    A1 <- 10
+    B2 <- 5
+	
+    // C3 depende de A1 y B2
+    C3 <- EvaluarCeldaConFormula("C3", A1, B2, C3)
+    
+    // D4 depende de C3
+    D4 <- EvaluarCeldaConFormula("D4", A1, B2, C3)
+	
+    Escribir "Estado Inicial -> C3: ", C3, " | D4: ", D4
+	
+    // ============================================================
+    // 2. Se modifica la celda base A1
+    // ============================================================
+    celdaModificada <- "A1"
+    A1 <- 20
+	
+    Escribir "Celda ", celdaModificada, " modificada a: ", A1
+	
+    // ============================================================
+    // 3. Iniciar el recálculo en cadena
+    //    A1 -> C3 -> D4
+    // ============================================================
+    PropagarCambios(celdaModificada, A1, B2, C3, D4)
+	
+    Escribir "Estado Final -> C3: ", C3, " | D4: ", D4
+FinAlgoritmo
+
+
+// ================================================================
+// RECÁLCULO EN CADENA
+// Recalcula las celdas que dependen de una celda modificada.
+// Ejemplo: A1 -> C3 -> D4
+// ================================================================
+SubProceso PropagarCambios(celdaActual, A1, B2, C3 Por Referencia, D4 Por Referencia)
+    Definir siguienteCelda Como Cadena
+	
+    // Buscar qué celda depende directamente de la actual
+    siguienteCelda <- BuscarDependientes(celdaActual)
+	
+    Mientras siguienteCelda <> "NINGUNA" Hacer
+        Escribir " -> Dependencia encontrada: ", siguienteCelda
+		
+        // Recalcular C3
+        Si siguienteCelda = "C3" Entonces
+            C3 <- EvaluarCeldaConFormula("C3", A1, B2, C3)
+            Escribir "    C3 recalculada: ", C3
+        SiNo
+            // Recalcular D4
+            Si siguienteCelda = "D4" Entonces
+                D4 <- EvaluarCeldaConFormula("D4", A1, B2, C3)
+                Escribir "    D4 recalculada: ", D4
+            FinSi
+        FinSi
+        
+        // Continuar con la siguiente dependencia
+        celdaActual <- siguienteCelda
+        siguienteCelda <- BuscarDependientes(celdaActual)
+    FinMientras
+FinSubProceso
+
+
+// ================================================================
+// MÓDULO DE DEPENDENCIAS
+// Simula las relaciones del grafo de dependencias.
+// Ruta: A1/B2 -> C3 -> D4
+// ================================================================
+Funcion dependiente <- BuscarDependientes(celda)
+    Definir dependiente Como Cadena
+	
+    Si celda = "A1" O celda = "B2" Entonces
+        dependiente <- "C3"
+    SiNo
+        Si celda = "C3" Entonces
+            dependiente <- "D4"
+        SiNo
+            dependiente <- "NINGUNA"
+        FinSi
+    FinSi
+FinFuncion
+
+
+// ================================================================
+// EVALUACIÓN DE LAS FÓRMULAS
+// Utiliza el evaluador del Paso 3.
+// ================================================================
+Funcion resultado <- EvaluarCeldaConFormula(celda, A1, B2, C3)
+    Definir resultado Como Real
+    Definir expresion Como Cadena
+    
+    Si celda = "C3" Entonces
+        expresion <- "A1+B2"
+        resultado <- EvaluarCadenaExpresion(expresion, A1, B2, C3)
+    SiNo
+        Si celda = "D4" Entonces
+            expresion <- "C3*2"
+            resultado <- EvaluarCadenaExpresion(expresion, A1, B2, C3)
+        SiNo
+            resultado <- 0
+        FinSi
+    FinSi
+FinFuncion
+
+
+Funcion resultado <- EvaluarCadenaExpresion(expr, A1, B2, C3)
+    Definir resultado Como Real
+    
+    // Enviar la expresión al evaluador de tokens
+    resultado <- EvaluarTokens(expr, A1, B2, C3)
+FinFuncion
+
+
+Funcion res <- EvaluarTokens(expr, A1, B2, C3)
+    Definir res Como Real
+    
+    // Evaluar las fórmulas de las celdas
+    Si expr = "A1+B2" Entonces
+        res <- A1 + B2
+    SiNo
+        Si expr = "C3*2" Entonces
+            res <- C3 * 2
+        SiNo
+            res <- 0
+        FinSi
+    FinSi
+FinFuncion
