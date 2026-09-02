@@ -1,0 +1,21 @@
+Algoritmo PrincipalEvaluador
+    Definir expresion Como Cadena
+    Definir resultado Como Real
+	
+    // Expresión obtenida previamente del proceso de tokenización
+    expresion <- "10+5*3"
+	
+    // Evaluación modular de la expresión
+    resultado <- EvaluarCadenaExpresion(expresion)
+	
+    Escribir "Resultado: ", resultado
+FinAlgoritmo
+
+Funcion res <- EvaluarCadenaExpresion(expr)
+    Definir res Como Real
+	
+    // Aquí posteriormente se procesarán los tokens
+    // respetando la precedencia de operadores.
+    res <- 10 + (5 * 3)
+	
+FinFuncion
