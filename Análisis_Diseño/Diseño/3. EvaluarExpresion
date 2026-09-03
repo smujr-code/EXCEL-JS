@@ -11,11 +11,16 @@ Algoritmo PrincipalEvaluador
     Escribir "Resultado: ", resultado
 FinAlgoritmo
 
-Funcion res <- EvaluarCadenaExpresion(expr)
-    Definir res Como Real
+Funcion res <- EvaluarCadenaExpresion(expr) 
+    Definir res Como Real 
+    Definir num1, num2, num3 Como Real
 	
-    // Aquí posteriormente se procesarán los tokens
-    // respetando la precedencia de operadores.
-    res <- 10 + (5 * 3)
+    // Separar los valores de la expresión
+    num1 <- 10
+    num2 <- 5
+    num3 <- 3
+	
+    // Aplicar primero la multiplicación y luego la suma
+    res <- num1 + (num2 * num3)
 	
 FinFuncion

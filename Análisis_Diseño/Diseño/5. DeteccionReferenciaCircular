@@ -1,0 +1,66 @@
+Algoritmo PrincipalReferenciaCircular
+    Definir esCircular Como Logico
+	
+    // ============================================================
+    // Ejemplo de dependencias:
+    // A1 -> B2 -> C3 -> A1
+    // ============================================================
+    esCircular <- DetectarReferenciaCircular("A1")
+	
+    Si esCircular Entonces
+        Escribir "Error: Referencia circular detectada."
+    SiNo
+        Escribir "Referencia válida. No se detectaron ciclos."
+    FinSi
+	
+    Escribir "Estado de bloqueo circular: ", esCircular
+FinAlgoritmo
+
+
+// ================================================================
+// MÓDULO DE DETECCIÓN DE REFERENCIAS CIRCULARES
+// ================================================================
+Funcion esCircular <- DetectarReferenciaCircular(celdaInicial)
+    Definir esCircular Como Logico
+    Definir celdaActual, siguienteCelda Como Cadena
+	
+    esCircular <- Falso
+    celdaActual <- celdaInicial
+    siguienteCelda <- ObtenerSiguienteDependencia(celdaActual)
+	
+    // Recorrer las dependencias hasta detectar si se regresa al origen
+    Mientras siguienteCelda <> "NINGUNA" Y NO esCircular Hacer
+        
+        // Comprobar si el próximo salto regresa al origen
+        Si siguienteCelda = celdaInicial Entonces
+            esCircular <- Verdadero
+        SiNo
+            // Avanzar al siguiente nodo del grafo simulado
+            celdaActual <- siguienteCelda
+            siguienteCelda <- ObtenerSiguienteDependencia(celdaActual)
+        FinSi
+        
+    FinMientras
+FinFuncion
+
+
+// ================================================================
+// MÓDULO AUXILIAR DE TRANSICIÓN DE GRAFO
+// ================================================================
+Funcion siguiente <- ObtenerSiguienteDependencia(celda)
+    Definir siguiente Como Cadena
+    
+    Si celda = "A1" Entonces
+        siguiente <- "B2"
+    SiNo
+        Si celda = "B2" Entonces
+            siguiente <- "C3"
+        SiNo
+            Si celda = "C3" Entonces
+                siguiente <- "A1"
+            SiNo
+                siguiente <- "NINGUNA"
+            FinSi
+        FinSi
+    FinSi
+FinFuncion

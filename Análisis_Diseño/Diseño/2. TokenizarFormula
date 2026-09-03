@@ -1,46 +1,64 @@
-Algoritmo PrincipalTokenizador
-    Definir formula Como Cadena
-    formula <- "=A1+B2*3"
+Algoritmo PrincipalTokenizador 
+    Definir formula Como Cadena 
+    formula <- "=A1+B2*3" 
 	
-    Escribir TokenizarFormula(formula)
-FinAlgoritmo
+    Escribir TokenizarFormula(formula) 
+FinAlgoritmo 
 
 
-Funcion resultadoTokens <- TokenizarFormula(formula)
-    Definir i Como Entero
-    Definir caracter Como Cadena
-    Definir token Como Cadena
-    Definir resultadoTokens Como Cadena
+Funcion resultadoTokens <- TokenizarFormula(formula) 
+    Definir i Como Entero 
+    Definir caracter Como Cadena 
+    Definir token Como Cadena 
+    Definir resultadoTokens Como Cadena 
 	
-    resultadoTokens <- ""
-    token <- ""
+    resultadoTokens <- "" 
+    token <- "" 
 	
-    // Recorrer fórmula
-    Para i <- 1 Hasta Longitud(formula) Hacer
-        caracter <- Subcadena(formula, i, i)
+    // Recorrer fórmula 
+    Para i <- 1 Hasta Longitud(formula) Hacer 
+        caracter <- Subcadena(formula, i, i) 
 		
-        // Detectar operadores y paréntesis
-        Si caracter = "+" O caracter = "-" O caracter = "*" O caracter = "/" O caracter = "(" O caracter = ")" Entonces
+        // Detectar operadores y paréntesis 
+        Si caracter = "+" O caracter = "-" O caracter = "*" O caracter = "/" O caracter = "(" O caracter = ")" Entonces 
 			
-            // Guardar token anterior
-            Si token <> "" Entonces
-                resultadoTokens <- resultadoTokens + token + " "
-                token <- ""
-            FinSi
+            // Guardar y clasificar el token anterior
+            Si token <> "" Entonces 
+                resultadoTokens <- resultadoTokens + ClasificarToken(token) + " " 
+                token <- "" 
+            FinSi 
 			
-            // Guardar operador
-            resultadoTokens <- resultadoTokens + caracter + " "
+            // Guardar operador o paréntesis
+            resultadoTokens <- resultadoTokens + "[OP:" + caracter + "] " 
 			
-        SiNo
-            Si caracter <> "=" Y caracter <> " " Entonces
+        SiNo 
+            Si caracter <> "=" Y caracter <> " " Entonces 
                 // Formar número o referencia
-                token <- token + caracter
-            FinSi
-        FinSi
-    FinPara
+                token <- token + caracter 
+            FinSi 
+        FinSi 
+    FinPara 
 	
-    // Guardar último token
-    Si token <> "" Entonces
-        resultadoTokens <- resultadoTokens + token
+    // Guardar y clasificar el último token
+    Si token <> "" Entonces 
+        resultadoTokens <- resultadoTokens + ClasificarToken(token) 
+    FinSi 
+FinFuncion
+
+
+// ================================================================
+// CLASIFICACIÓN DE TOKENS
+// Identifica si el token corresponde a una referencia de celda
+// o a un número.
+// ================================================================
+Funcion tipo <- ClasificarToken(t)
+    Definir tipo Como Cadena
+    
+    // Si comienza con una letra, se considera referencia de celda
+    Si Subcadena(t, 1, 1) >= "A" Y Subcadena(t, 1, 1) <= "Z" Entonces
+        tipo <- "[REF:" + t + "]"
+    SiNo
+        // Si no comienza con letra, se considera número
+        tipo <- "[NUM:" + t + "]"
     FinSi
 FinFuncion
