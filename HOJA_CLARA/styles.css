@@ -8,3 +8,43 @@ body {
     color: #202124;
 }
 
+/*estilos para la cuadricula para que se vea mejor*/
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f8f9fa;
+}
+
+#grid-container {
+    border: 1px solid #d0d5dd;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    overflow: auto;
+    height: 380px;
+    max-height: 380px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #d0d5dd;
+    padding: 6px 12px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+th {
+    background-color: #f1f3f4;
+    color: #374151;
+    text-align: center;
+}
+
+td.cell {
+    background-color: #ffffff;
+    cursor: cell;
+    min-width: 80px;
+    height: 25px;
+}
