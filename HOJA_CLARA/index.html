@@ -9,7 +9,12 @@
     <h1>Enunciado de Práctica de Curso</h1> 
     <h1>"HojaClara"</h1> 
 
-
+<!-- Barra de herramientas superior -->
+    <div id="toolbar" style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
+        <span id="celda-activa-label" style="font-weight: bold; min-width: 30px;">A1</span>
+        <input type="text" id="barra-formulas" placeholder="Escribe un valor..." style="flex-grow: 1; padding: 4px;">
+    </div>
+    
     <div id="grid-container"></div>
     <script src="cuadricula.js"></script>
 </body>

@@ -71,3 +71,22 @@ document.addEventListener("DOMContentLoaded", function() {
     tabla.appendChild(tbody);
     contenedor.appendChild(tabla);
 });
+
+/*selección de celdas activas barra de formulas*/
+
+let celdaActivaRef = "A1";
+
+function seleccionarCelda(ref) {
+    document.querySelectorAll(".cell").forEach(c => c.classList.remove("celda-activa"));
+    celdaActivaRef = ref;
+    let label = document.getElementById("celda-activa-label");
+    let barra = document.getElementById("barra-formulas");
+    let td = document.querySelector(`[data-ref='${ref}']`);
+
+    if (label) label.textContent = ref;
+    if (td) td.classList.add("celda-activa");
+    if (barra) {
+        let estado = estadoCeldas[ref];
+        barra.value = (estado && estado.valor) ? estado.valor : "";
+    }
+}
