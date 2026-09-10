@@ -41,15 +41,15 @@ function construirCelda(i, j) {
     td.className = "cell";
     td.dataset.ref = refCelda;
     td.textContent = (estadoCeldas[refCelda] && estadoCeldas[refCelda].valor) ? estadoCeldas[refCelda].valor : "";
-    return td;
-
+    
     td.addEventListener("click", function() {
         seleccionarCelda(refCelda);
         let barra = document.getElementById("barra-formulas");
         if (barra) barra.focus();
     });
+    
+    return td;
 }
-
 document.addEventListener("DOMContentLoaded", function() {
     const contenedor = document.getElementById("grid-container");
     if (!contenedor) return;
