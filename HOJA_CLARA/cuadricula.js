@@ -96,3 +96,33 @@ function seleccionarCelda(ref) {
         barra.value = (estado && estado.valor) ? estado.valor : "";
     }
 }
+
+// Guardamos los valores de las celdas y los mostramos al cargar
+
+function guardarValorCelda(ref, valor) {
+    if (!estadoCeldas[ref]) estadoCeldas[ref] = {};
+    estadoCeldas[ref].valor = valor;
+    try {
+        localStorage.setItem("hojaClaraData", JSON.stringify(estadoCeldas));
+    } catch (e) {
+        console.error("Error al guardar", e);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    let barra = document.getElementById("barra-formulas");
+    if (barra) {
+        barra.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                let valorIngresado = barra.value;
+                guardarValorCelda(celdaActivaRef, valorIngresado);
+                let td = document.querySelector(`[data-ref='${celdaActivaRef}']`);
+                if (td) td.textContent = valorIngresado;
+                barra.blur();
+            }
+        });
+    }
+    // Seleccionar la celda inicial al cargar
+    seleccionarCelda("A1");
+});
