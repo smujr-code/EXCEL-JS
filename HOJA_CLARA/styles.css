@@ -1,7 +1,10 @@
 /*Estilos generales para la interfaz de usuario*/
+
+/*ESTRUCTURA Y CELDAS DE LA CUADRÍCULA (NIVEL 1)*/
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 15px;
     background-color: #f8f9fa;
     color: #202124;
 }
+
