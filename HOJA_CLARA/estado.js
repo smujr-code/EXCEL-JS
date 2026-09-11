@@ -24,3 +24,24 @@ function obtenerValorCelda(ref) {
     if (!coincidencia) {
         return "#ERROR!";
     }
+
+    // 2. Respaldo directo desde el DOM si la celda ya fue renderizada
+    let celdaDom = document.querySelector(`[data-ref='${ref}']`);
+
+    if (celdaDom) {
+        let input = celdaDom.querySelector("input");
+
+        if (input && input.value !== "" && !input.value.startsWith("=")) {
+            return input.value;
+        }
+
+        let texto = celdaDom.textContent.trim();
+
+        if (texto !== "" && !texto.startsWith("=")) {
+            return texto;
+        }
+    }
+
+    // La celda existe, pero está vacía
+    return "";
+}
