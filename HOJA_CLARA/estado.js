@@ -1,0 +1,2 @@
+JavaScript
+const estadoCeldas = {};
