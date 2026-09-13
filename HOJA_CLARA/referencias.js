@@ -9,3 +9,27 @@ function registrarDependencia(celdaOrigen, celdaDestino) {
 
     grafoDependencias[celdaOrigen].add(celdaDestino);
 }
+
+// Comprueba si una dependencia termina regresando a la celda inicial.
+function detectarReferenciaCircular(celdaInicial, celdaActual = celdaInicial, visitados = new Set()) {
+
+    if (visitados.has(celdaActual)) {
+        return celdaActual === celdaInicial;
+    }
+
+    visitados.add(celdaActual);
+
+    let dependientes = grafoDependencias[celdaActual];
+
+    if (dependientes) {
+        for (let dep of dependientes) {
+            if (detectarReferenciaCircular(celdaInicial, dep, visitados)) {
+                return true;
+            }
+        }
+    }
+
+    visitados.delete(celdaActual);
+    return false;
+}
+//s
