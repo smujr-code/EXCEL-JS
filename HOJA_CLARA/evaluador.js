@@ -20,7 +20,8 @@ function clasificarToken(t) {
     }
 }
 
-// Recorre la fórmula carácter por carácter para separar operadores y separadores, y agrupa los textos para su posterior clasificación.
+// Recorre la fórmula carácter por carácter para separar operadores 
+// y separadores, y agrupa los textos para su posterior clasificación.
 
 function tokenizarFormula(formula) {
     let resultadoTokens = [];
