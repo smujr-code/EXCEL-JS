@@ -1,4 +1,4 @@
-/* ESTILOS GENERALES Y DISEÑO DE LA HOJA DE CÁLCULO*/
+/* ESTILOS GENERALES Y DISEÑO DE LA HOJA DE CÁLCULO */
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -29,13 +29,46 @@ body {
     background-color: #e8eaed;
 }
 
- /*ESTRUCTURA Y CELDAS DE LA CUADRÍCULA*/
+/* BARRA DE FÓRMULAS Y ETIQUETA DE CELDA ACTIVA */
 
-#grid-container, .hoja-container {
-    border: 1px solid #d0d5dd;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    overflow: auto;
-    max-height: 400px;
+.formula-bar-container {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    padding: 4px 8px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    gap: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+#celda-activa-label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #3c4043;
+    min-width: 32px;
+    text-align: center;
+    background: #f1f3f4;
+    padding: 4px 6px;
+    border-radius: 3px;
+    border: 1px solid #dadce0;
+}
+
+#barra-formulas {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    color: #202124;
+}
+
+/* ESTRUCTURA Y CELDAS DE LA CUADRÍCULA*/
+.hoja-container {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid #dadce0;
     border-radius: 4px;
     background-color: #ffffff;
 }
@@ -47,8 +80,8 @@ table {
 }
 
 th, td {
-    border: 1px solid #d0d5dd;
-    padding: 6px 12px;
+    border: 1px solid #e0e0e0;
+    padding: 4px 6px;
     text-align: center;
     min-width: 85px;
     height: 26px;
@@ -59,45 +92,118 @@ th, td {
 }
 
 th {
-    background-color: #f1f3f4;
-    color: #374151;
+    background-color: #f8f9fa;
+    color: #5f6368;
     font-weight: 600;
     user-select: none;
 }
 
 td.cell {
-    background-color: #ffffff;
     cursor: cell;
     color: #202124;
-    min-width: 80px;
 }
 
-/* Encabezados y columnas fijas */
-#grid-container table tr:first-child th {
+/* ESTADOS DE SELECCIÓN DE CELDAS */
+
+/* Celda seleccionada actual */
+td.cell.celda-activa {
+    border: 2px solid #1a73e8 !important;
+    background-color: #e8f0fe;
+    outline: none;
+}
+
+/* Rangos seleccionados al escribir fórmulas o usar el mouse */
+td.cell.celda-seleccionada {
+    background-color: #d2e3fc;
+    border: 1px dashed #1a73e8;
+}
+
+
+/* Contenedor principal de la barra superior */
+.barra-superior {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    font-family: sans-serif;
+}
+
+/* Etiqueta de la celda activa (ej. A1) */
+#celda-activa-label {
+    font-weight: bold;
+    min-width: 40px;
+    text-align: center;
+    background: #e9ecef;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* Barra de fórmulas estirada y cómoda */
+#barra-formulas {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#barra-formulas:focus {
+    border-color: #4c6ef5;
+    box-shadow: 0 0 0 2px rgba(76, 110, 245, 0.2);
+}
+
+/* Selector de formato dinámico */
+#formato {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#formato:focus {
+    border-color: #4c6ef5;
+    box-shadow: 0 0 0 2px rgba(76, 110, 245, 0.2);
+}
+
+/* 1. Mantener la barra superior fija arriba del todo */
+.barra-superior {
     position: sticky;
     top: 0;
+    z-index: 100; /* Asegura que esté por encima de todo al hacer scroll */
+    background-color: #f8f9fa; /* Color de fondo para que no se trasluzca el texto */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Opcional: una ligera sombra para separarlo */
+}
+
+/* 2. Mantener la fila de los encabezados de las columnas (A, B, C) fija debajo de la barra */
+#grid-container table tr:first-child th {
+    position: sticky;
+    top: 53px; /* Ajusta este valor según la altura exacta de tu barra superior (ej. 50px, 60px) */
     z-index: 90;
-    background-color: #f1f3f4;
+    background-color: #ffffff; /* Fondo obligatorio para que las celdas que pasen por debajo queden ocultas */
     border-bottom: 2px solid #dee2e6;
 }
 
+/* 3. Opcional: Si también quieres fijar la columna de los números de fila (1, 2, 3...) al hacer scroll horizontal */
 #grid-container table tr th:first-child {
     position: sticky;
     left: 0;
     z-index: 80;
-    background-color: #f1f3f4;
+    background-color: #ffffff;
 }
-   /*ESTADOS DE SELECCIÓN DE CELDAS*/
-
-td.cell.celda-activa, td.celda-activa {
-    border: 2px solid #1a73e8 !important;
-    background-color: #e8f0fe;
-    outline: 2px solid #1a73e8;
-    z-index: 5;
-    position: relative;
-}
-
-td.cell.celda-seleccionada {
-    background-color: #d2e3fc;
-    border: 1px dashed #1a73e8;
+.contenedor-superior-fijo {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #ffffff; /* Evita que las celdas se trasluzcan por detrás */
+    padding-bottom: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Sombra elegante para separar del contenido */
 }
