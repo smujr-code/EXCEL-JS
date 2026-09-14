@@ -19,3 +19,11 @@ function cargarEstadoLocal() {
         alert("No hay datos guardados previamente.");
     }
 }
+
+function limpiarTodaLaHoja() {
+    if (confirm("¿Estás seguro de que deseas limpiar toda la hoja y borrar los datos guardados?")) {
+        localStorage.removeItem("hojaClaraData");
+        Object.keys(estadoCeldas).forEach(k => delete estadoCeldas[k]);
+        location.reload();
+    }
+}
