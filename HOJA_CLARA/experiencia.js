@@ -18,3 +18,34 @@ document.addEventListener("keydown", function(e) {
 //desplazamiento entre celdas con teclados
 let esFlecha = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key);
     let esEnter = e.key === "Enter";
+
+if (e.shiftKey && esFlecha) {
+        e.preventDefault();
+
+        if (!window.celdaInicioShift) {
+            window.celdaInicioShift = celdaActivaRef;
+            window.celdaFinShift = celdaActivaRef;
+        }
+
+        let colCode = window.celdaFinShift.charCodeAt(0);
+        let filaNum = parseInt(window.celdaFinShift.slice(1));
+
+        if (e.key === "ArrowDown") filaNum += 1;
+        else if (e.key === "ArrowUp") filaNum -= 1;
+        else if (e.key === "ArrowRight") colCode += 1;
+        else if (e.key === "ArrowLeft") colCode -= 1;
+
+        if (filaNum < 1) filaNum = 1;
+        if (filaNum > TOTAL_FILAS) filaNum = TOTAL_FILAS;
+        if (colCode < 65) colCode = 65;
+        if (colCode > 64 + TOTAL_COLUMNAS) colCode = 64 + TOTAL_COLUMNAS;
+
+        window.celdaFinShift = `${String.fromCharCode(colCode)}${filaNum}`;
+
+        limpiarSeleccion();
+        mostrarRangoSeleccion(window.celdaInicioShift, window.celdaFinShift);
+        return;
+    } else if (!e.shiftKey) {
+        window.celdaInicioShift = null;
+        window.celdaFinShift = null;
+    }
