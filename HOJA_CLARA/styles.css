@@ -1,6 +1,5 @@
-/*Estilos generales para la interfaz de usuario*/
+/* ESTILOS GENERALES Y DISEÑO DE LA HOJA DE CÁLCULO*/
 
-/*ESTRUCTURA Y CELDAS DE LA CUADRÍCULA (NIVEL 1)*/
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 15px;
@@ -8,91 +7,97 @@ body {
     color: #202124;
 }
 
-/*estilos para la cuadricula para que se vea mejor*/
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f8f9fa;
+.toolbar {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
 }
 
-#grid-container {
+.toolbar button {
+    background-color: #f1f3f4;
+    border: 1px solid #dadce0;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.toolbar button:hover {
+    background-color: #e8eaed;
+}
+
+ /*ESTRUCTURA Y CELDAS DE LA CUADRÍCULA*/
+
+#grid-container, .hoja-container {
     border: 1px solid #d0d5dd;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     overflow: auto;
-    height: 380px;
-    max-height: 380px;
+    max-height: 400px;
+    border-radius: 4px;
+    background-color: #ffffff;
 }
 
 table {
     border-collapse: collapse;
+    background-color: #ffffff;
     width: 100%;
 }
 
 th, td {
     border: 1px solid #d0d5dd;
     padding: 6px 12px;
-    font-size: 14px;
+    text-align: center;
+    min-width: 85px;
+    height: 26px;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 th {
     background-color: #f1f3f4;
     color: #374151;
-    text-align: center;
+    font-weight: 600;
+    user-select: none;
 }
 
 td.cell {
     background-color: #ffffff;
     cursor: cell;
+    color: #202124;
     min-width: 80px;
-    height: 25px;
 }
 
-/*resaltamos la celda activa y barra de formulas*/
-td.celda-activa {
+/* Encabezados y columnas fijas */
+#grid-container table tr:first-child th {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background-color: #f1f3f4;
+    border-bottom: 2px solid #dee2e6;
+}
+
+#grid-container table tr th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 80;
+    background-color: #f1f3f4;
+}
+   /*ESTADOS DE SELECCIÓN DE CELDAS*/
+
+td.cell.celda-activa, td.celda-activa {
+    border: 2px solid #1a73e8 !important;
+    background-color: #e8f0fe;
     outline: 2px solid #1a73e8;
     z-index: 5;
     position: relative;
 }
 
-.formula-bar-container {
-    display: flex;
-    align-items: center;
-    background: #ffffff;
-    border: 1px solid #dadce0;
-    padding: 4px 8px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    gap: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-#celda-activa-label {
-    font-weight: 600;
-    font-size: 12px;
-    color: #3c4043;
-    min-width: 32px;
-    text-align: center;
-    background: #f1f3f4;
-    padding: 4px 6px;
-    border-radius: 3px;
-    border: 1px solid #dadce0;
-}
-
-#barra-formulas {
-    flex-grow: 1;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    background: transparent;
-    color: #202124;
-}
-
-.hoja-container {
-    max-width: 100%;
-    overflow-x: auto;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    background-color: #ffffff;
+td.cell.celda-seleccionada {
+    background-color: #d2e3fc;
+    border: 1px dashed #1a73e8;
 }
