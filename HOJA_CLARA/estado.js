@@ -1,10 +1,7 @@
-/*Crea el objeto central en memoria que almacenará la
-información de las celdas de forma independiente al DOM*/
-JavaScript
+// VALORES DE CELDA
+
 const estadoCeldas = {};
 
-/*Define la función que asigna o actualiza el valor de 
-una celda específica dentro del objeto de estado global*/
 function guardarValorCelda(ref, valor) {
     if (!estadoCeldas[ref]) {
         estadoCeldas[ref] = {};
@@ -13,8 +10,7 @@ function guardarValorCelda(ref, valor) {
     estadoCeldas[ref].valor = valor;
 }
 
-// Normaliza la referencia a mayúsculas y valida que
-//  esté dentro de los límites de la cuadrícula (A-J, 1-15); retorna #ERROR! si no es válida.
+
 function obtenerValorCelda(ref) {
     ref = ref.toUpperCase().trim();
 
@@ -23,6 +19,15 @@ function obtenerValorCelda(ref) {
 
     if (!coincidencia) {
         return "#ERROR!";
+    }
+
+    // 1. Buscar en el estado interno
+    if (estadoCeldas[ref]) {
+        let val = estadoCeldas[ref].valor;
+
+        if (val !== undefined && val !== "" && val !== null) {
+            return val;
+        }
     }
 
     // 2. Respaldo directo desde el DOM si la celda ya fue renderizada
