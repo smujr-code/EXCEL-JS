@@ -272,6 +272,7 @@ function seleccionarCelda(ref) {
     if (barra) {
         let estado = typeof estadoCeldas !== 'undefined' ? estadoCeldas[ref] : null;
         barra.value = (estado && estado.formula) ? estado.formula : obtenerValorCelda(ref);
+        barra.select();
     }
     
     actualizarSelectorFormato(ref);
@@ -366,7 +367,7 @@ function obtenerPosicionCelda(ref) {
 function formatearTextoCelda(td, valor, tipoFormato = "normal") {
     td.classList.remove("saldo-negativo", "saldo-positivo");
 
-    if (valor === "" || valor === undefined || valor === null) {
+    if (valor === "" || valor === undefined || valor === null || String(valor).includes("ERROR") || valor === "NaN") {
         td.textContent = "";
         return;
     }
