@@ -7,7 +7,7 @@ function clasificarToken(t) {
 
     if (["SUMA", "PROMEDIO", "MAX", "MIN"].includes(tUpper)) {
         return { tipo: "FUNC", valor: tUpper };
-    } else if (t.length > 0 && t[0] >= "A" && t[0] <= "Z") {
+    } else if (/^[A-Z]+\d+$/.test(tUpper)) {
         return { tipo: "REF", valor: tUpper };
     } else {
         let numero = parseFloat(t);

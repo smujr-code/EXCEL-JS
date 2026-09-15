@@ -118,20 +118,26 @@ function inicializarCuadricula() {
             
             formatearTextoCelda(td, valorInicial, formatoCelda);
 
-           td.addEventListener("click", function(e) {
+          td.addEventListener("click", function(e) {
                 let barra = document.getElementById("barra-formulas");
                 
                 if (barra && barra.value.startsWith("=")) {
-                    let inicio = barra.selectionStart;
-                    let fin = barra.selectionEnd;
-                    let textoAntes = barra.value.substring(0, inicio);
+                    e.preventDefault(); // Evita que la barra pierda el foco
                     
-                    // Evita que se duplique si la referencia ya está justo antes del cursor
-                    if (!textoAntes.endsWith(refCelda)) {
-                        barra.value = textoAntes + refCelda + barra.value.substring(fin);
-                        barra.focus();
-                        barra.dispatchEvent(new Event('input'));
-                    }
+                    let inicio = barra.selectionStart !== null ? barra.selectionStart : barra.value.length;
+                    let fin = barra.selectionEnd !== null ? barra.selectionEnd : barra.value.length;
+                    
+                    let textoAntes = barra.value.substring(0, inicio);
+                    let textoDespues = barra.value.substring(fin);
+
+                    // Inserta la referencia de la celda en la posición actual del cursor
+                    barra.value = textoAntes + refCelda + textoDespues;
+                    
+                    // Reposiciona el cursor justo después de la celda insertada para seguir escribiendo o concatenando
+                    let nuevaPosicion = inicio + refCelda.length;
+                    barra.focus();
+                    barra.setSelectionRange(nuevaPosicion, nuevaPosicion);
+                    barra.dispatchEvent(new Event('input'));
                     
                     e.stopPropagation();
                     return;
@@ -170,11 +176,10 @@ function inicializarCuadricula() {
     document.addEventListener("mouseup", function() {
         if (!seleccionandoRango) return;
         seleccionandoRango = false;
-
-        if (celdaInicioSeleccion && celdaFinSeleccion) {
+        if (celdaInicioSeleccion && celdaFinSeleccion && celdaInicioSeleccion !== celdaFinSeleccion) {
             let barra = document.getElementById("barra-formulas");
             if (barra) {
-                let rangoRef = (celdaInicioSeleccion === celdaFinSeleccion) ? celdaInicioSeleccion : `${celdaInicioSeleccion}:${celdaFinSeleccion}`;
+                let rangoRef = `${celdaInicioSeleccion}:${celdaFinSeleccion}`;
                 let inicio = barra.selectionStart;
                 let fin = barra.selectionEnd;
                 barra.value = barra.value.substring(0, inicio) + rangoRef + barra.value.substring(fin);
@@ -268,11 +273,16 @@ function seleccionarCelda(ref) {
     if (label) label.textContent = ref;
     if (td) td.classList.add("celda-activa");
 
-    td.dataset.valorPrevio = obtenerValorCelda(ref);
+    if (td) {
+        td.dataset.valorPrevio = obtenerValorCelda(ref);
+    }
+    
     if (barra) {
-        let estado = typeof estadoCeldas !== 'undefined' ? estadoCeldas[ref] : null;
-        barra.value = (estado && estado.formula) ? estado.formula : obtenerValorCelda(ref);
-        barra.select();
+        // Solo actualizamos el valor de la barra si NO estamos escribiendo activamente una fórmula en ella
+        if (!barra.value.startsWith("=") || document.activeElement !== barra) {
+            let estado = typeof estadoCeldas !== 'undefined' ? estadoCeldas[ref] : null;
+            barra.value = (estado && estado.formula) ? estado.formula : obtenerValorCelda(ref);
+        }
     }
     
     actualizarSelectorFormato(ref);
@@ -288,10 +298,13 @@ function aplicarValorCelda(ref, valorIngresado) {
     if (valorIngresado.startsWith("=")) {
         let formulaLimpia = valorIngresado.substring(1).toUpperCase();
         let tokens = tokenizarFormula(formulaLimpia);
-        valorFinal = evaluarExpresionAritmetica(tokens, (r) => {
+       valorFinal = evaluarExpresionAritmetica(tokens, (r) => {
             let val = obtenerValorCelda(r.toUpperCase());
-            return (val === "" || val === undefined || val === null || isNaN(val)) ? 0 : val;
-           });
+            if (val === "" || val === undefined || val === null) return 0;
+            if (typeof val === "string" && val.startsWith("#")) return val;
+            let num = parseFloat(val);
+            return isNaN(num) ? "#ERROR!" : num;
+        })
         if (typeof estadoCeldas !== 'undefined') {
             if (!estadoCeldas[ref]) estadoCeldas[ref] = {};
             estadoCeldas[ref].formula = valorIngresado;
@@ -324,9 +337,12 @@ function aplicarValorCelda(ref, valorIngresado) {
         if (estadoDep && estadoDep.formula && estadoDep.formula.startsWith("=")) {
             let formulaLimpia = estadoDep.formula.substring(1).toUpperCase();
             let tokens = tokenizarFormula(formulaLimpia);
-            valorFinalDep = evaluarExpresionAritmetica(tokens, (r) => {
+           valorFinalDep = evaluarExpresionAritmetica(tokens, (r) => {
                 let val = obtenerValorCelda(r.toUpperCase());
-                return (val === "" || val === undefined || val === null || isNaN(val)) ? 0 : val;
+                if (val === "" || val === undefined || val === null) return 0;
+                if (typeof val === "string" && val.startsWith("#")) return val;
+                let num = parseFloat(val);
+                return isNaN(num) ? "#ERROR!" : num;
             });
             guardarValorCelda(refDependiente, valorFinalDep);
         }
@@ -382,11 +398,13 @@ function obtenerPosicionCelda(ref) {
 function formatearTextoCelda(td, valor, tipoFormato = "normal") {
     td.classList.remove("saldo-negativo", "saldo-positivo");
 
-    if (valor === "" || valor === undefined || valor === null || String(valor).includes("ERROR") || valor === "NaN") {
+    // 1. Si está completamente vacío, limpiar celda
+    if (valor === "" || valor === undefined || valor === null || valor === "NaN") {
         td.textContent = "";
         return;
     }
 
+    // 2. CORRECCIÓN: Si es un error que empieza con #, mostrarlo y marcarlo en rojo (saldo-negativo)
     if (typeof valor === "string" && valor.startsWith("#")) {
         td.textContent = valor;
         td.classList.add("saldo-negativo");
