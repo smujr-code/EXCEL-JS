@@ -50,3 +50,12 @@ function obtenerValorCelda(ref) {
     // La celda existe, pero está vacía
     return "";
 }
+
+let historialUndo = [];
+let historialRedo = [];
+
+function guardarEstadoHistorial() {
+    historialUndo.push(JSON.stringify(estadoCeldas));
+    if (historialUndo.length > 50) historialUndo.shift(); // Límite de 50 pasos
+    historialRedo = []; // Limpiar rehacer al hacer una nueva acción
+}

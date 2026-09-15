@@ -135,7 +135,7 @@ td.cell.celda-seleccionada {
 /* Etiqueta de la celda activa (ej. A1) */
 #celda-activa-label {
     font-weight: bold;
-    min-width: 35px;
+    min-width: 45px;
     background: #e9ecef;
     border-radius: 4px;
     border: 1px solid #ced4da;

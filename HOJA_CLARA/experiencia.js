@@ -15,6 +15,12 @@ document.addEventListener("keydown", function(e) {
         }
         return;
     }
+
+    if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        deshacerAccion();
+        return;
+    }
 //desplazamiento entre celdas con teclados
 let esFlecha = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key);
     let esEnter = e.key === "Enter";

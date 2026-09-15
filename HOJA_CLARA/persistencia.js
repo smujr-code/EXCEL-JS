@@ -49,3 +49,15 @@ function exportarACSV() {
     link.click();
     document.body.removeChild(link);
 }
+
+function deshacerAccion() {
+    if (historialUndo.length === 0) return;
+    
+    historialRedo.push(JSON.stringify(estadoCeldas));
+    let estadoAnterior = JSON.parse(historialUndo.pop());
+    
+    Object.keys(estadoCeldas).forEach(k => delete estadoCeldas[k]);
+    Object.assign(estadoCeldas, estadoAnterior);
+    
+    location.reload(); // Recarga limpia para actualizar la UI con el estado previo
+}

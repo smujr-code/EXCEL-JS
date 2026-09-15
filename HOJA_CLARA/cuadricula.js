@@ -282,6 +282,10 @@ function seleccionarCelda(ref) {
 }
 
 function aplicarValorCelda(ref, valorIngresado) {
+    if (typeof guardarEstadoHistorial === "function") {
+        guardarEstadoHistorial();
+    }
+    
     let valorFinal = valorIngresado;
 
     if (valorIngresado.startsWith("=")) {
