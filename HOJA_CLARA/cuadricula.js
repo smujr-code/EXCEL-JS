@@ -406,6 +406,9 @@ function formatearTextoCelda(td, valor, tipoFormato = "normal") {
                 textoFormateado = numero.toString();
                 break;
         }
+        if (numero < 0) {
+            td.classList.add("saldo-negativo");
+        }
         
         td.textContent = textoFormateado;
     } else {

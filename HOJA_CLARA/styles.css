@@ -212,3 +212,12 @@ td.cell.celda-seleccionada {
     padding-bottom: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Sombra elegante para separar del contenido */
 }
+
+td.cell.saldo-negativo {
+    color: #d93025 !important;
+    font-weight: 500;
+}
+
+td.cell.saldo-positivo {
+    color: #188038 !important;
+}
