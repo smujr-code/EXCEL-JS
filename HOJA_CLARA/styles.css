@@ -2,9 +2,15 @@
 
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 15px;
+    margin: 0;
+    padding: 15px;
     background-color: #f8f9fa;
     color: #202124;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .toolbar {
@@ -68,11 +74,12 @@ body {
 
 /* ESTRUCTURA Y CELDAS DE LA CUADRÍCULA*/
 .hoja-container {
-    max-width: 100%;
-    overflow-x: auto;
+    flex: 1;
+    overflow: auto;
     border: 1px solid #dadce0;
     border-radius: 4px;
     background-color: #ffffff;
+    min-height: 0;
 }
 
 table {
@@ -191,11 +198,10 @@ td.cell.celda-seleccionada {
 /* 2. Mantener la fila de los encabezados de las columnas (A, B, C) fija debajo de la barra */
 #grid-container table tr:first-child th {
     position: sticky;
-    top: 53px; /* Ajusta este valor según la altura exacta de tu barra superior (ej. 50px, 60px) */
-    z-index: 90;
+    left: 0;
+    z-index: 9200;
     background-color: #ffffff; /* Fondo obligatorio para que las celdas que pasen por debajo queden ocultas */
-    border-bottom: 2px solid #dee2e6;
-}
+    }
 
 /* 3. Opcional: Si también quieres fijar la columna de los números de fila (1, 2, 3...) al hacer scroll horizontal */
 #grid-container table tr th:first-child {
@@ -223,16 +229,13 @@ td.cell.saldo-positivo {
 }
 
 .acciones-inferiores {
-    position: fixed; 
-    bottom: 20px;
-    right: 20px;
+    position: relative; 
+    justify-content: flex-end;
     display: flex;
     gap: 8px; 
-    z-index: 1000; 
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    padding: 5px 0;
+    box-shadow: none;
 }
 
 .button-naranja {
@@ -255,3 +258,4 @@ td.cell.saldo-positivo {
   color: white;             
   border-color: #d35400;
 }
+

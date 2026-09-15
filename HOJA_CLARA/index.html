@@ -15,7 +15,7 @@
    <!-- Barra de herramientas superior con formato de celda incluida-->
      <div class="barra-superior">
         <span style="background-color: orange;" id="celda-activa-label">A1</span>
-        <input style="border:2px solid rgb(224, 227, 18);"  type="text" id="barra-formulas" placeholder="Escribe valor o fórmula..." />
+        <input style="background-color: #ffe5cc; border: 2px solid #f39c12;" type="text" id="barra-formulas" placeholder="Escribe valor o fórmula..." />
         <select id="formato">
             <option value="normal">Normal</option>
             <option value="moneda">Moneda</option>
@@ -24,6 +24,9 @@
         </select>
     </div>
 
+    
+    <div class="hoja-container" id="grid-container"></div> 
+    
     <div class="acciones-inferiores">
         <button class="button-naranja" onclick="guardarEstadoLocal()">Guardar</button>
         <button class="button-naranja" onclick="cargarEstadoLocal()">Cargar</button>
@@ -38,6 +41,5 @@
     <script src="persistencia.js"></script>
     <script src="experiencia.js"></script>
     <script src="cuadricula.js"></script>
-    <div id="grid-container"></div> 
 </body>
 </html>
