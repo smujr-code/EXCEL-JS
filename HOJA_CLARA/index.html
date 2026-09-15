@@ -17,10 +17,17 @@
         <button onclick="exportarACSV()">Exportar</button>
         <button onclick="limpiarTodaLaHoja()">Limpiar</button>
     </div>
-<!-- Barra de herramientas superior -->
-    <div id="toolbar" style="margin-bottom: 10px; display: flex; gap: 10px; align-items: center;">
-        <span style="background-color: orange;" id="celda-activa-label" style="font-weight: bold; min-width: 30px;">A1</span>
-        <input style="border:2px solid rgb(224, 227, 18);" type="text" id="barra-formulas" placeholder="Escribe un valor..." style="flex-grow: 1; padding: 4px;">
+  
+   <!-- Barra de herramientas superior con formato de celda incluida-->
+     <div class="barra-superior">
+        <span style="background-color: orange;" id="celda-activa-label">A1</span>
+        <input style="border:2px solid rgb(224, 227, 18);"  type="text" id="barra-formulas" placeholder="Escribe valor o fórmula..." />
+        <select id="formato">
+            <option value="normal">Normal</option>
+            <option value="moneda">Moneda</option>
+            <option value="porcentaje">Porcentaje</option>
+            <option value="decimal">Decimal</option>
+        </select>
     </div>
 
     <script src="estado.js"></script> 
