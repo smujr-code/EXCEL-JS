@@ -204,21 +204,8 @@ function configurarBarraFormulasGlobal() {
                 ? estadoCeldas[celdaActivaRef].formato 
                 : "normal";
             
-            if (valorActual.startsWith("=")) {
-                let formulaLimpia = valorActual.substring(1).trim();
-                
-                if (formulaLimpia === "" || /^[A-Z]+\s*\(?$/.test(formulaLimpia)) {
-                    formatearTextoCelda(td, valorActual, formatoActual);
-                    return;
-                }
-
-                try {
-                    let tokens = tokenizarFormula(formulaLimpia);
-                    let valorParcial = evaluarExpresionAritmetica(tokens, (r) => obtenerValorCelda(r));
-                    formatearTextoCelda(td, valorParcial, formatoActual);
-                } catch (e) {
-                    formatearTextoCelda(td, valorActual, formatoActual);
-                }
+           if (valorActual.startsWith("=")) {
+                formatearTextoCelda(td, valorActual, formatoActual);
             } else {
                 formatearTextoCelda(td, valorActual, formatoActual);
             }
@@ -298,9 +285,9 @@ function aplicarValorCelda(ref, valorIngresado) {
     let valorFinal = valorIngresado;
 
     if (valorIngresado.startsWith("=")) {
-        let formulaLimpia = valorIngresado.substring(1);
+        let formulaLimpia = valorIngresado.substring(1).toUpperCase();
         let tokens = tokenizarFormula(formulaLimpia);
-        valorFinal = evaluarExpresionAritmetica(tokens, (r) => obtenerValorCelda(r));
+        valorFinal = evaluarExpresionAritmetica(tokens, (r) => obtenerValorCelda(r.toUpperCase()));
 
         if (typeof estadoCeldas !== 'undefined') {
             if (!estadoCeldas[ref]) estadoCeldas[ref] = {};
