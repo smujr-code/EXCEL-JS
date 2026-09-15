@@ -288,8 +288,10 @@ function aplicarValorCelda(ref, valorIngresado) {
     if (valorIngresado.startsWith("=")) {
         let formulaLimpia = valorIngresado.substring(1).toUpperCase();
         let tokens = tokenizarFormula(formulaLimpia);
-        valorFinal = evaluarExpresionAritmetica(tokens, (r) => obtenerValorCelda(r.toUpperCase()));
-
+        valorFinal = evaluarExpresionAritmetica(tokens, (r) => {
+            let val = obtenerValorCelda(r.toUpperCase());
+            return (val === "" || val === undefined || val === null || isNaN(val)) ? 0 : val;
+           });
         if (typeof estadoCeldas !== 'undefined') {
             if (!estadoCeldas[ref]) estadoCeldas[ref] = {};
             estadoCeldas[ref].formula = valorIngresado;
@@ -316,9 +318,22 @@ function aplicarValorCelda(ref, valorIngresado) {
 
     propasarRecalculo(ref, function(refDependiente, valor) {
         let celdaDep = document.querySelector(`[data-ref='${refDependiente}']`);
-        let formatoDep = (typeof estadoCeldas !== 'undefined' && estadoCeldas[refDependiente] && estadoCeldas[refDependiente].formato) ? estadoCeldas[refDependiente].formato : "normal";
+        let estadoDep = (typeof estadoCeldas !== 'undefined' && estadoCeldas[refDependiente]) ? estadoCeldas[refDependiente] : null;
+        
+        let valorFinalDep = valor;
+        if (estadoDep && estadoDep.formula && estadoDep.formula.startsWith("=")) {
+            let formulaLimpia = estadoDep.formula.substring(1).toUpperCase();
+            let tokens = tokenizarFormula(formulaLimpia);
+            valorFinalDep = evaluarExpresionAritmetica(tokens, (r) => {
+                let val = obtenerValorCelda(r.toUpperCase());
+                return (val === "" || val === undefined || val === null || isNaN(val)) ? 0 : val;
+            });
+            guardarValorCelda(refDependiente, valorFinalDep);
+        }
+
+        let formatoDep = estadoDep && estadoDep.formato ? estadoDep.formato : "normal";
         if (celdaDep) {
-            formatearTextoCelda(celdaDep, valor, formatoDep);
+            formatearTextoCelda(celdaDep, valorFinalDep, formatoDep);
         }
     });
 }
