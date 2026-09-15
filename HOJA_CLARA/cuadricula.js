@@ -25,8 +25,8 @@ function inicializarCuadricula() {
 
     // Aplicar estilos estrictos al contenedor para garantizar scroll interno y evitar que se desborde la página
     contenedor.style.overflow = "auto";
-    contenedor.style.height = "380px";
-    contenedor.style.maxHeight = "380px";
+    contenedor.style.height = "450px";
+    contenedor.style.maxHeight = "500px";
     contenedor.style.position = "relative";
     contenedor.style.boxSizing = "border-box";
 

@@ -11,12 +11,6 @@
     <span style="color:blue;">></span> 
     "HojaClara"
     </h1>
-    <div class="toolbar">
-        <button onclick="guardarEstadoLocal()">Guardar</button>
-        <button onclick="cargarEstadoLocal()">Cargar</button>
-        <button onclick="exportarACSV()">Exportar</button>
-        <button onclick="limpiarTodaLaHoja()">Limpiar</button>
-    </div>
   
    <!-- Barra de herramientas superior con formato de celda incluida-->
      <div class="barra-superior">
@@ -28,6 +22,13 @@
             <option value="porcentaje">Porcentaje</option>
             <option value="decimal">Decimal</option>
         </select>
+    </div>
+
+    <div class="acciones-inferiores">
+        <button class="button-naranja" onclick="guardarEstadoLocal()">Guardar</button>
+        <button class="button-naranja" onclick="cargarEstadoLocal()">Cargar</button>
+        <button class="button-naranja" onclick="exportarACSV()">Exportar</button>
+        <button class="button-naranja" onclick="limpiarTodaLaHoja()">Limpiar</button>
     </div>
 
     <script src="estado.js"></script> 

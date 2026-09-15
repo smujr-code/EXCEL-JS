@@ -221,3 +221,37 @@ td.cell.saldo-negativo {
 td.cell.saldo-positivo {
     color: #188038 !important;
 }
+
+.acciones-inferiores {
+    position: fixed; 
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px; 
+    z-index: 1000; 
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-naranja {
+  background-color: #ffe5cc; 
+  color: #d35400;           
+  border: 2px solid #f39c12;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 4px;       
+}
+
+.button-naranja:hover {
+  background-color: #e67e22; 
+  color: white;             
+  border-color: #d35400;
+}
