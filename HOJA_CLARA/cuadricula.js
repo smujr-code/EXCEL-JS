@@ -118,15 +118,21 @@ function inicializarCuadricula() {
             
             formatearTextoCelda(td, valorInicial, formatoCelda);
 
-            td.addEventListener("click", function(e) {
+           td.addEventListener("click", function(e) {
                 let barra = document.getElementById("barra-formulas");
                 
                 if (barra && barra.value.startsWith("=")) {
                     let inicio = barra.selectionStart;
                     let fin = barra.selectionEnd;
-                    barra.value = barra.value.substring(0, inicio) + refCelda + barra.value.substring(fin);
-                    barra.focus();
-                    barra.dispatchEvent(new Event('input'));
+                    let textoAntes = barra.value.substring(0, inicio);
+                    
+                    // Evita que se duplique si la referencia ya está justo antes del cursor
+                    if (!textoAntes.endsWith(refCelda)) {
+                        barra.value = textoAntes + refCelda + barra.value.substring(fin);
+                        barra.focus();
+                        barra.dispatchEvent(new Event('input'));
+                    }
+                    
                     e.stopPropagation();
                     return;
                 }
@@ -192,6 +198,7 @@ function configurarBarraFormulasGlobal() {
     barra.addEventListener("input", function() {
         let td = document.querySelector(`[data-ref='${celdaActivaRef}']`);
         if (td) {
+            td.dataset.valorPrevio = typeof obtenerValorCelda === 'function' ? obtenerValorCelda(celdaActivaRef) : (td.textContent || "");
             let valorActual = barra.value;
             let formatoActual = (typeof estadoCeldas !== 'undefined' && estadoCeldas[celdaActivaRef] && estadoCeldas[celdaActivaRef].formato) 
                 ? estadoCeldas[celdaActivaRef].formato 
