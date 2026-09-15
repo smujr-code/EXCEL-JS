@@ -111,6 +111,7 @@ function inicializarCuadricula() {
             td.dataset.ref = refCelda;
             
             let valorInicial = obtenerValorCelda(refCelda);
+            td.dataset.valorPrevio = valorInicial;
             let formatoCelda = (typeof estadoCeldas !== 'undefined' && estadoCeldas[refCelda] && estadoCeldas[refCelda].formato) 
                 ? estadoCeldas[refCelda].formato 
                 : "normal";
@@ -273,6 +274,7 @@ function seleccionarCelda(ref) {
     if (label) label.textContent = ref;
     if (td) td.classList.add("celda-activa");
 
+    td.dataset.valorPrevio = obtenerValorCelda(ref);
     if (barra) {
         let estado = typeof estadoCeldas !== 'undefined' ? estadoCeldas[ref] : null;
         barra.value = (estado && estado.formula) ? estado.formula : obtenerValorCelda(ref);
@@ -285,7 +287,7 @@ function aplicarValorCelda(ref, valorIngresado) {
     if (typeof guardarEstadoHistorial === "function") {
         guardarEstadoHistorial();
     }
-    
+
     let valorFinal = valorIngresado;
 
     if (valorIngresado.startsWith("=")) {

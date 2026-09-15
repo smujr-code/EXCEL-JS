@@ -10,17 +10,35 @@ document.addEventListener("keydown", function(e) {
             barra.value = "";
             barra.dispatchEvent(new Event('input'));
         }
-        if (celdaActivaRef) {
+       if (celdaActivaRef) {
+            let tdActual = document.querySelector(`[data-ref='${celdaActivaRef}']`);
+            if (tdActual && tdActual.dataset.valorPrevio === undefined) {
+                tdActual.dataset.valorPrevio = obtenerValorCelda(celdaActivaRef);
+            }
             aplicarValorCelda(celdaActivaRef, "");
         }
         return;
     }
 
-    if (e.ctrlKey && e.key.toLowerCase() === 'z') {
+   if (e.ctrlKey && e.key.toLowerCase() === 'z') {
         e.preventDefault();
-        deshacerAccion();
+        console.log("-> Ctrl+Z presionado. Celda activa:", celdaActivaRef);
+        let tdActiva = document.querySelector(`[data-ref='${celdaActivaRef}']`);
+        if (tdActiva) {
+            let valorAnterior = tdActiva.dataset.valorPrevio !== undefined ? tdActiva.dataset.valorPrevio : "";
+            console.log("-> Restaurando valor previo:", valorAnterior);
+            
+            aplicarValorCelda(celdaActivaRef, valorAnterior); 
+            
+            let barra = document.getElementById("barra-formulas");
+            if (barra) {
+                barra.value = valorAnterior;
+                barra.dispatchEvent(new Event('input')); 
+            }
+        }
         return;
     }
+
 //desplazamiento entre celdas con teclados
 let esFlecha = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key);
     let esEnter = e.key === "Enter";
@@ -81,6 +99,10 @@ if (e.shiftKey && esFlecha) {
         let celdaDestino = document.querySelector(`[data-ref='${siguienteRef}']`);
         if (celdaDestino) {
             seleccionarCelda(siguienteRef);
+            let td = document.querySelector(`[data-ref='${siguienteRef}']`);
+            if (td) {
+                td.dataset.valorPrevio = typeof obtenerValorCelda === 'function' ? obtenerValorCelda(siguienteRef) : (td.textContent || "");
+            }
         }
         return;
     }
