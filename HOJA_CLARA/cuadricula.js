@@ -424,8 +424,8 @@ function formatearTextoCelda(td, valor, tipoFormato = "normal") {
                 if (numero < 0) td.classList.add("saldo-negativo");
                 else td.classList.add("saldo-positivo");
                 break;
-            case "porcentaje":
-                textoFormateado = (numero * 100).toLocaleString('es-GT', {
+           case "porcentaje":
+                textoFormateado = numero.toLocaleString('es-GT', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }) + " %";

@@ -209,3 +209,110 @@ function estaEditandoFormula() {
     }
     return false;
 }
+
+// NUEVA FUNCIÓN: Borra el contenido de todas las celdas seleccionadas en un rango
+function eliminarRangoSeleccionado() {
+    if (typeof guardarEstadoHistorial === "function") {
+        guardarEstadoHistorial();
+    }
+
+    // Busca todas las celdas que tengan la clase de selección
+    let celdasSeleccionadas = document.querySelectorAll(".cell.celda-seleccionada");
+
+    // Si por alguna razón no hay selección múltiple, toma la celda activa actual
+    if (celdasSeleccionadas.length === 0 && typeof celdaActivaRef !== 'undefined') {
+        let celdaActiva = document.querySelector(`[data-ref='${celdaActivaRef}']`);
+        if (celdaActiva) celdasSeleccionadas = [celdaActiva];
+    }
+
+    // Itera sobre cada celda seleccionada para limpiarla por completo
+    celdasSeleccionadas.forEach(td => {
+        let ref = td.dataset.ref;
+        if (!ref) return;
+
+        // 1. Eliminar la fórmula guardada en el estado si existe
+        if (typeof estadoCeldas !== 'undefined' && estadoCeldas[ref]) {
+            delete estadoCeldas[ref].formula;
+        }
+
+        // 2. Guardar el valor vacío en el sistema de datos
+        if (typeof guardarValorCelda === 'function') {
+            guardarValorCelda(ref, "");
+        }
+
+        // 3. Limpiar visualmente la celda en pantalla
+        let formatoActual = (typeof estadoCeldas !== 'undefined' && estadoCeldas[ref] && estadoCeldas[ref].formato) 
+            ? estadoCeldas[ref].formato 
+            : "normal";
+        
+        if (typeof formatearTextoCelda === 'function') {
+            formatearTextoCelda(td, "", formatoActual);
+        } else {
+            td.textContent = "";
+        }
+    });
+}
+
+// --- FUNCIÓN INDEPENDIENTE PARA BORRAR RANGOS SELECCIONADOS ---
+function limpiarRangoSeleccionadoTotal() {
+    if (typeof guardarEstadoHistorial === "function") {
+        guardarEstadoHistorial();
+    }
+
+    // Selecciona todas las celdas que tengan la clase visual de selección de rango
+    let celdasSeleccionadas = document.querySelectorAll(".cell.celda-seleccionada");
+
+    // Si por alguna razón no hay rango marcado, toma al menos la celda activa
+    if (celdasSeleccionadas.length === 0 && typeof celdaActivaRef !== 'undefined') {
+        let celdaActiva = document.querySelector(`[data-ref='${celdaActivaRef}']`);
+        if (celdaActiva) celdasSeleccionadas = [celdaActiva];
+    }
+
+    // Itera y limpia cada celda de la selección múltiple
+    celdasSeleccionadas.forEach(td => {
+        let ref = td.dataset.ref;
+        if (!ref) return;
+
+        // 1. Borrar fórmula asociada si existe
+        if (typeof estadoCeldas !== 'undefined' && estadoCeldas[ref]) {
+            delete estadoCeldas[ref].formula;
+        }
+
+        // 2. Limpiar en el almacenamiento de datos de la hoja
+        if (typeof guardarValorCelda === 'function') {
+            guardarValorCelda(ref, "");
+        }
+
+        // 3. Obtener formato para refrescar visualmente limpio
+        let formatoActual = (typeof estadoCeldas !== 'undefined' && estadoCeldas[ref] && estadoCeldas[ref].formato) 
+            ? estadoCeldas[ref].formato 
+            : "normal";
+        
+        if (typeof formatearTextoCelda === 'function') {
+            formatearTextoCelda(td, "", formatoActual);
+        } else {
+            td.textContent = "";
+        }
+
+        // 4. Propagar recálculo si alguna celda dependía de estas
+        if (typeof propasarRecalculo === 'function') {
+            propasarRecalculo(ref, function(refDep, valDep) {
+                let celdaDep = document.querySelector(`[data-ref='${refDep}']`);
+                if (celdaDep && typeof formatearTextoCelda === 'function') {
+                    let estadoDep = (typeof estadoCeldas !== 'undefined' && estadoCeldas[refDep]) ? estadoCeldas[refDep] : null;
+                    let formatoDep = estadoDep && estadoDep.formato ? estadoDep.formato : "normal";
+                    formatearTextoCelda(celdaDep, valDep, formatoDep);
+                }
+            });
+        }
+    });
+}
+
+// Escuchador global de teclado exclusivo para la tecla Suprimir/Delete o Backspace
+document.addEventListener("keydown", function(e) {
+    // Verifica que se presione Delete o Backspace y que NO se esté escribiendo en un input o en la barra de fórmulas
+    if ((e.key === "Delete" || e.key === "Backspace") && document.activeElement.tagName !== "INPUT" && document.activeElement.id !== "barra-formulas") {
+        e.preventDefault();
+        limpiarRangoSeleccionadoTotal();
+    }
+});
